@@ -81,9 +81,11 @@ if(attach_file):
 	encoders.encode_base64(part)
 
 	# Add header as key/value pair to attachment part
+	path, attach_filename = os.path.split(attach_file)
+	print attach_filename
 	part.add_header(
 	    "Content-Disposition",
-	    "attachment; filename=%s" % attach_file,
+	    "attachment; filename=%s" % attach_filename,
 	)
 	msgRoot.attach(part)
 
