@@ -35,7 +35,9 @@ os.environ["mail.smtp.host"] = host
 to_address = raw_input();
 subject = raw_input();
 inputHTML = raw_input();
-inputHTML.replace("\\\\n", "\n")
+inputHTML = inputHTML.replace("\\\\n", "<br>")
+inputHTML = inputHTML.replace("\\n", "<br>")
+inputHTML = inputHTML.replace("\n", "<br>")
 
 msgRoot = MIMEMultipart('related')
 msgRoot['From']=from_address
@@ -52,7 +54,10 @@ imgText = '<img src="cid:image1">'
 if('{{image}}' in inputHTML):
 	inputHTML = inputHTML.replace('{{image}}', imgText)
 else:
-	inputHTML = '<pre>' + inputHTML + '</pre>' + imgText
+	if(image_file):
+		inputHTML = '<pre>' + inputHTML + '</pre>' + imgText
+	else:
+		inputHTML = '<pre>' + inputHTML + '</pre>'
 
 msgText = MIMEText(inputHTML, 'html')
 msgAlternative.attach(msgText)
@@ -88,7 +93,7 @@ if(debug):
 	s.starttls()
 	s.login(from_address, 'arirangA123')
 else:
-	s = smtplib.SMTP('localhost')
+	s = smtplib.SMTP(host)
 
 s.sendmail(from_address, to_address.split(','), msgRoot.as_string())
 
